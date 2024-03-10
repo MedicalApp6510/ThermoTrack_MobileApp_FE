@@ -20,7 +20,9 @@ function UploadScreen({ route, navigation }) {
 
   return (
     <View style={styles.container}>
-      <Image source={{ uri: imageUri }} style={styles.image} />
+      <View style={styles.imgContainer}>
+        <Image source={{ uri: imageUri }} style={styles.image} />
+      </View>
       <Text style={styles.text}>Sending to the server and analyzing the image...</Text>
     </View>
   );
@@ -33,12 +35,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#fff',
   },
+  imgContainer: {
+    width: 300, 
+    height: 300, 
+    borderColor: 'gray',
+    borderWidth: 3,
+    marginBottom: 48,
+  },
   image: {
-    border: '1px solid',
     width: 300, 
     height: 300, 
     resizeMode: 'contain',
-    marginBottom: 20,
   },
   text: {
     fontSize: 16,
