@@ -1,19 +1,29 @@
 import React, { useEffect } from 'react';
 import { View, StyleSheet, Image, Text } from 'react-native';
+import {writeImageToDB, writeToDB} from "../firebaseUtils/firestore";
 
 function UploadScreen({ route, navigation }) {
-  const { imageUri } = route.params; 
+  const { imageUri } = route.params;
 
-  useEffect(() => {
+
+  useEffect( () => {
     // TODO: Upload the photo the album
     const uploadImage = async () => {
-      console.log('Upload the photo the album: ', route.params.imageUri);
-      // Mock
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // Navigate to the SuccessScreen
-      navigation.navigate('Success');
-    };
+      // console.log('Upload the photo the album: ', route.params.imageUri);
+      console.log("imageUri", imageUri);
+      const url = await writeImageToDB(imageUri);
+      console.log("url", url);
+
+      const data = {
+        imgUrl: url,
+      };
+
+      await writeToDB(data, "images");
+
+
+    // Navigate to the SuccessScreen
+    navigation.navigate('Success');
+  };
 
     uploadImage();
   }, []);
@@ -36,15 +46,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   imgContainer: {
-    width: 300, 
-    height: 300, 
+    width: 300,
+    height: 300,
     borderColor: 'gray',
     borderWidth: 3,
     marginBottom: 48,
   },
   image: {
-    width: 300, 
-    height: 300, 
+    width: 300,
+    height: 300,
     resizeMode: 'contain',
   },
   text: {

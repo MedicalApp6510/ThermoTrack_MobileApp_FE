@@ -2,10 +2,10 @@ import React from 'react';
 import * as ImagePicker from 'expo-image-picker';
 import { View, StyleSheet, Text } from 'react-native';
 import { Button, useTheme } from 'react-native-paper';
-import { data } from '../mockHistoryData'; 
+import { data } from '../mockHistoryData';
 
 function HomeScreen({ navigation }) {
-  const { colors } = useTheme(); 
+  const { colors } = useTheme();
 
   // Get latest history data value
   const latestTemperature = data.length > 0 ? data[data.length - 1].temperature : null;
@@ -25,8 +25,8 @@ function HomeScreen({ navigation }) {
       quality: 1,
     });
 
-    if (!result.cancelled) {
-      navigation.navigate('Upload', { imageUri: result.uri });
+    if (!result.canceled) {
+      navigation.navigate('Upload', { imageUri: result.assets[0].uri });
     }
   };
 
@@ -43,8 +43,8 @@ function HomeScreen({ navigation }) {
       quality: 1,
     });
 
-    if (!result.cancelled) {
-      navigation.navigate('Upload', { imageUri: result.uri });
+    if (!result.canceled) {
+      navigation.navigate('Upload', { imageUri: result.assets[0].uri });
     }
   };
 
@@ -130,8 +130,8 @@ const styles = StyleSheet.create({
   },
   button: {
     width: '45%',
-    height: 48, 
-    justifyContent:'center', 
+    height: 48,
+    justifyContent:'center',
     borderWidth: 1,
     borderRadius: 16,
   },
