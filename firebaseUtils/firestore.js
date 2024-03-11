@@ -13,7 +13,6 @@ import {
 } from "firebase/firestore";
 import {getDownloadURL, getStorage, ref, uploadBytes} from "firebase/storage";
 import { auth, db, storage } from "./firebaseSetup";
-import {uuid} from "expo-modules-core/src";
 
 export async function writeImageToDB(image) {
   try {

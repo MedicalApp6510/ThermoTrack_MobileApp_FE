@@ -1,11 +1,21 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import { Button, Text } from 'react-native-paper';
+import {View, StyleSheet} from 'react-native';
+import {Button, Text} from 'react-native-paper';
 
-function SuccessScreen({ navigation }) {
+function SuccessScreen({route, navigation}) {
+  const digit = route.params.digit;
+  const isSuccessful = false;
+  // const isSuccessful = route.params.isSuccessful;
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Success!</Text>
+      {isSuccessful ?
+        <View style={styles.title}>
+          <Text style={styles.title}>Success!</Text>
+          <Text style={styles.title}>The digit is {digit} </Text>
+        </View>
+        : <Text style={styles.title}>Failed to recognize the digit</Text>}
+
       <Button mode="contained" onPress={() => navigation.navigate('Home')} style={styles.button}>
         Back to Home
       </Button>
