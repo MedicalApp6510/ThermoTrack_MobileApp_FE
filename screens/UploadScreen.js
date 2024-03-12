@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import { View, StyleSheet, Image, Text } from 'react-native';
 import {writeImageToDB, writeToDB} from "../firebaseUtils/firestore";
+import { REACT_APP_SERVER_URL } from "@env";
 
 function UploadScreen({ route, navigation }) {
   const { imageUri } = route.params;
@@ -8,17 +9,14 @@ function UploadScreen({ route, navigation }) {
 
 
   useEffect( () => {
-    // TODO: Upload the photo the album
     const uploadImage = async () => {
       const url = await writeImageToDB(imageUri);
-      console.log("url", url);
-
       await writeToDB({imgUrl: url}, "images");
-      // const digits = await callImageRecognitionServer(url);
-
+      const digits = await callImageRecognitionServer(url);
+      console.log('Digits: ', digits);
 
     // Navigate to the SuccessScreen
-    navigation.navigate('Success', { digit: mockDigit, isSuccessful: true});
+    navigation.navigate('Success', { digit: digits, isSuccessful: true});
   };
 
     uploadImage();
@@ -26,7 +24,7 @@ function UploadScreen({ route, navigation }) {
 
   async function callImageRecognitionServer(imageUrl) {
     try {
-      const serverResponse = await fetch('REACT_APP_SERVER_URL', {
+      const serverResponse = await fetch(REACT_APP_SERVER_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -38,8 +36,13 @@ function UploadScreen({ route, navigation }) {
         throw new Error(`Server response was not ok: ${serverResponse.status}`);
       }
 
-      const result = await serverResponse.json(); // Assuming the server responds with JSON
-      return result.digits; // Assuming the server returns an object with a 'digits' property
+      const { result, logs } = await serverResponse.json();
+      const digits = result.join('');
+
+      console.log('Recognized digits:', digits);
+
+      return digits;
+
     } catch (error) {
       console.error('There was an error calling the image recognition server: ', error);
       throw error;

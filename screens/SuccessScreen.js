@@ -4,8 +4,8 @@ import {Button, Text} from 'react-native-paper';
 
 function SuccessScreen({route, navigation}) {
   const digit = route.params.digit;
-  const isSuccessful = false;
-  // const isSuccessful = route.params.isSuccessful;
+  // const isSuccessful = false;
+  const isSuccessful = route.params.isSuccessful;
 
   return (
     <View style={styles.container}>

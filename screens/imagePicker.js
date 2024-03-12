@@ -53,7 +53,7 @@ export default function HomeImagePicker( ) {
       setIsBottomSheetVisible(false);
 
       if (!result.canceled) {
-        console.log(result.assets[0].uri);
+        console.log("result", result.assets[0].uri);
         navigation.navigate('Upload', { imageUri: result.assets[0].uri });
       }
     } catch (e) {
@@ -69,11 +69,11 @@ export default function HomeImagePicker( ) {
         textColor={colors.primary}
         buttonColor={colors.primaryContainer}
         style={[styles.button, {borderColor: colors.primaryContainer }]}
-        onPress={() => setIsBottomSheetVisible(true)} 
+        onPress={() => setIsBottomSheetVisible(true)}
       >
         <Text style={styles.buttonText}>Upload new data</Text>
       </Button>
-      
+
       <BottomSheet isVisible={isBottomSheetVisible}>
         <Pressable
           style={({ pressed }) => [
