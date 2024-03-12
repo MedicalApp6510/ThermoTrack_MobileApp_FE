@@ -14,11 +14,11 @@ function UploadScreen({ route, navigation }) {
       console.log("url", url);
 
       await writeToDB({imgUrl: url}, "images");
-      const digits = await callImageRecognitionServer(url);
+      // const digits = await callImageRecognitionServer(url);
 
 
     // Navigate to the SuccessScreen
-    navigation.navigate('Success', { digit: digit, isSuccessful: true});
+    navigation.navigate('Success', { digit: mockDigit, isSuccessful: true});
   };
 
     uploadImage();

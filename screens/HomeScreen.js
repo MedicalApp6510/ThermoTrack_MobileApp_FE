@@ -11,43 +11,6 @@ function HomeScreen({ navigation }) {
   const latestTemperature = data.length > 0 ? data[data.length - 1].temperature : null;
   const latestTimestamp = data.length > 0 ? data[data.length - 1].timestamp : null;
 
-  // const pickImage = async () => {
-  //   const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-  //   if (status !== 'granted') {
-  //     alert('Sorry, we need camera roll permissions to make this work!');
-  //     return;
-  //   }
-
-  //   let result = await ImagePicker.launchImageLibraryAsync({
-  //     mediaTypes: ImagePicker.MediaTypeOptions.Images,
-  //     allowsEditing: true,
-  //     aspect: [4, 3],
-  //     quality: 1,
-  //   });
-
-  //   if (!result.canceled) {
-  //     navigation.navigate('Upload', { imageUri: result.assets[0].uri });
-  //   }
-  // };
-
-  // const takePhoto = async () => {
-  //   const { status } = await ImagePicker.requestCameraPermissionsAsync();
-  //   if (status !== 'granted') {
-  //     alert('Sorry, we need camera permissions to make this work!');
-  //     return;
-  //   }
-
-  //   let result = await ImagePicker.launchCameraAsync({
-  //     allowsEditing: true,
-  //     aspect: [4, 3],
-  //     quality: 1,
-  //   });
-
-  //   if (!result.canceled) {
-  //     navigation.navigate('Upload', { imageUri: result.assets[0].uri });
-  //   }
-  // };
-
   return (
     <View style={[styles.container, { backgroundColor: colors.primary }]}>
       {/* Top: Text */}
