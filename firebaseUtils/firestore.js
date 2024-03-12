@@ -11,37 +11,14 @@ import {
   updateDoc,
   where
 } from "firebase/firestore";
-import {getDownloadURL, getStorage, ref, uploadBytes} from "firebase/storage";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { auth, db, storage } from "./firebaseSetup";
-
-export async function writeImageToDB(image) {
-  try {
-    const img = await fetch(image);
-    console.log("img", img);
-    const blob = await img.blob();
-    console.log("blob", blob);
-
-    // Upload file and metadata to the object 'images/mountains.jpg'
-    const storageRef = ref(storage, "images/" + new Date().getTime() + ".jpg");
-    console.log("storageRef", storageRef);
-
-    // 'file' comes from the Blob or File API
-    return await uploadBytes(storageRef, blob).then((result) =>
-      getDownloadURL(result.ref)
-    );
-
-  } catch (err) {
-    console.log(err);
-  }
-}
-
 
 export async function writeToDB(data, collectionName, key = "") {
   try {
-    if (key !== "") {
+    if (key !== "") { // Key means the data you want to write
       return await setDoc(doc(db, collectionName, key), data);
     } else {
-      console.log("data", data);
       return await addDoc(collection(db, collectionName), data);
     }
   } catch (err) {
@@ -93,13 +70,29 @@ export async function updateToDB(key, collectionName, changingDict) {
   }
 }
 
-
-export function getCurrentUserEmail() {
+// Upload the img to the db, and return an url
+export async function writeImageToDB(image) {
   try {
-    const user = auth.currentUser;
+    const img = await fetch(image);
+    const blob = await img.blob();
+    // Upload file and metadata to the object 'images/mountains.jpg'
+    const storageRef = ref(storage, "images/" + new Date().getTime() + ".jpg");
 
-    return user ? user.email : "";
+    // 'file' comes from the Blob or File API
+    return await uploadBytes(storageRef, blob).then((result) =>
+      getDownloadURL(result.ref)
+    );
   } catch (err) {
     console.log(err);
   }
 }
+
+// export function getCurrentUserEmail() {
+//   try {
+//     const user = auth.currentUser;
+
+//     return user ? user.email : "";
+//   } catch (err) {
+//     console.log(err);
+//   }
+// }
