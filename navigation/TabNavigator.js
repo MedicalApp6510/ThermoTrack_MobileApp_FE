@@ -7,7 +7,6 @@ import HomeScreen from '../screens/HomeScreen.js';
 import HistoryScreen from '../screens/HistoryScreen.js';
 import UploadScreen from '../screens/UploadScreen.js';
 import SuccessScreen from '../screens/SuccessScreen.js';
-import { BlurView } from 'expo-blur';
 
 const Tab = createBottomTabNavigator();
 
