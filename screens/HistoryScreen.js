@@ -1,25 +1,56 @@
-import React from 'react';
-import { View, StyleSheet, ScrollView } from 'react-native';
+import React, {useState, useEffect} from 'react';
+import { View, StyleSheet, ScrollView, Alert } from 'react-native';
 import { Title, Button, Divider, Paragraph, useTheme } from 'react-native-paper';
-import { data } from '../mockHistoryData.js';
+import { doc, onSnapshot } from "firebase/firestore";
+import { db, auth } from "../firebaseUtils/firebaseSetup";
+import { getCurrentUserEmail } from "../firebaseUtils/firestore";
 
 function HistoryScreen({ navigation }) {
+  
+  const [user, setUser] = useState(null);
+  useEffect(() => {
+    const docRef = doc(db, "users", getCurrentUserEmail());
+    const unSubscribe = onSnapshot(docRef, (snapshot) => {
+      setUser(snapshot.data());
+    });
+
+    return () => unSubscribe();
+  }, []);
   const { colors } = useTheme();
 
   const handleLogout = () => {
-    // TODO: Implement logout logic
-    console.log('Logout');
-    // Navigate to login screen
-    navigation.navigate('Login');
+    Alert.alert("Confirm to Log Out", "Are you sure you want to log out?", [
+      {
+        text: "Cancel",
+      },
+      {
+        text: "Confirm",
+        onPress: () =>{
+          // Navigate to login screen
+          navigation.navigate('Login');
+          auth
+            .signOut()
+            .catch((error) =>{
+              Alert.alert(
+                "Error",
+                "Log out failed. Please check your internet connection."
+              )
+            })
+      },}
+    ]);
   };
 
-  const historyData = data;
+  const historyData = user ? Object.keys(user).map((key) => ({
+    id: key,
+    timestamp: user[key].timestamp,
+    temperature: user[key].temperature,
+  })) : [];
 
   return (
     <ScrollView style={[styles.container, { backgroundColor: colors.primary }]}>
       {/* User Information */}
       <View style={styles.userInfoContainer}>
-        <Title style={styles.userInfoTitle}>Hello, Joe!</Title>
+        <Title style={styles.userInfoTitle}>Hello, {getCurrentUserEmail()}!</Title>
       </View>
 
       {/* Contents */}
@@ -34,7 +65,7 @@ function HistoryScreen({ navigation }) {
                   <Paragraph style={{color: colors.onSurfaceVariant}}>{item.timestamp}</Paragraph>
                 </View>
                 <View style={styles.historyItemRight}>
-                  <Paragraph style={styles.temperatureText}>{item.temperature}</Paragraph>
+                  <Paragraph style={styles.temperatureText}>{item.temperature}°C</Paragraph>
                 </View>
                 {/* Render gray divider line if not the last item */}
                 {index !== historyData.length - 1 && <Divider />}
