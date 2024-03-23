@@ -44,7 +44,9 @@ function HistoryScreen({ navigation }) {
     id: key,
     timestamp: user[key].timestamp,
     temperature: user[key].temperature,
-  })) : [];
+  })).sort((a, b) => {
+    return b.id - a.id;
+  }) : [];
 
   return (
     <ScrollView style={[styles.container, { backgroundColor: colors.primary }]}>
