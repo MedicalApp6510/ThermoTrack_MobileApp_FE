@@ -1,23 +1,93 @@
 import React, { useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Alert } from 'react-native';
 import { Button, TextInput, Text, useTheme } from 'react-native-paper';
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import { auth } from "../firebaseUtils/firebaseSetup";
 
 function AuthScreen({ navigation }) {
   const [isLogin, setIsLogin] = useState(true);
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const { colors } = useTheme();
 
   const handleSubmit = () => {
     if (isLogin) {
-      console.log('Login with:', username, password);
-      // TODO: handle the login logic
-      navigation.navigate('Main');
+      console.log('Login with:', email, password);
+      signInWithEmailAndPassword(auth, email, password)
+        .then(() => 
+          navigation.navigate('Main'))
+        .catch((error) => {
+          const errorCode = error.code;
+          let errorMessage = "";
+          switch (errorCode) {
+            case "auth/invalid-email":
+              errorMessage =
+                "The email is invalid, please correct your email address.";
+              setEmail("");
+              setPassword("");
+              setConfirmPassword("");
+              break;
+            case "auth/user-disabled":
+              errorMessage =
+                "The user corresponding to the given email has been disabled.";
+              setEmail("");
+              setPassword("");
+              setConfirmPassword("");
+              break;
+            case "auth/user-not-found":
+              errorMessage = "No user was found using the email.";
+              setEmail("");
+              setPassword("");
+              setConfirmPassword("");
+              break;
+            case "auth/wrong-password":
+              errorMessage = "Wrong password. Please try again.";
+              setPassword("");
+              setConfirmPassword("");
+              break;
+            default:
+              errorMessage =
+                "Error happened while logging in, please try again later.";
+          }
+          Alert.alert("Login Failed", errorMessage);
+        });
     } else {
-      console.log('Register with:', username, password, confirmPassword);
-      // TODO: handle the register logic
-      navigation.navigate('Main');
+      console.log('Register with:', email, password, confirmPassword);
+      createUserWithEmailAndPassword(auth, email, password)
+        .then(() => 
+          navigation.navigate('Main')
+        ).catch((error) => {
+          const errorCode = error.code;
+          switch (errorCode) {
+            case "auth/email-already-in-use":
+              Alert.alert(
+                "SignUp Failed",
+                "The email is already registered, please use another email."
+              );
+              setEmail("");
+              setPassword("");
+              setConfirmPassword("");
+              break;
+            case "auth/invalid-email":
+              Alert.alert(
+                "SignUp Failed",
+                "The email is invalid, please correct your email address."
+              );
+              setEmail("");
+              setPassword("");
+              setConfirmPassword("");
+              break;
+            default:
+              Alert.alert(
+                "SignUp Failed",
+                "Error happened while signing up, please try again later."
+              );
+          }
+        });
     }
   };
 
@@ -27,9 +97,9 @@ function AuthScreen({ navigation }) {
         {isLogin ? 'Log In' : 'Sign Up'}
       </Text>
       <TextInput
-        label="Username"
-        value={username}
-        onChangeText={setUsername}
+        label="Email Address"
+        value={email}
+        onChangeText={setEmail}
         mode="outlined"
         style={styles.input}
       />

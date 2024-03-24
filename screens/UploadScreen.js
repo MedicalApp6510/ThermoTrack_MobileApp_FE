@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import { View, StyleSheet, Image, Text } from 'react-native';
-import {writeImageToDB, writeToDB} from "../firebaseUtils/firestore";
+import {getCurrentUserEmail, updateToDB, writeImageToDB, writeToDB} from "../firebaseUtils/firestore";
 import { REACT_APP_SERVER_URL } from "@env";
 
 function UploadScreen({ route, navigation }) {
@@ -12,15 +12,31 @@ function UploadScreen({ route, navigation }) {
     const uploadImage = async () => {
       const url = await writeImageToDB(imageUri);
       await writeToDB({imgUrl: url}, "images");
+      console.log("upload url  " + url);
       const digits = await callImageRecognitionServer(url);
       console.log('Digits: ', digits);
+      const currentTime = new Date();
+      const options = {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: true
+      };
+      const newTemperatureEntry = {};
+      newTemperatureEntry[Math.floor(currentTime.getTime() / 1000)] = {
+        temperature: digits,
+        timestamp: new Intl.DateTimeFormat('en-US', options).format(currentTime)
+      };
+      await updateToDB(getCurrentUserEmail(), "users", newTemperatureEntry);
 
     // Navigate to the SuccessScreen
     navigation.navigate('Success', { digit: digits, isSuccessful: true});
   };
 
     uploadImage();
-  }, []);
+  }, [imageUri]);
 
   async function callImageRecognitionServer(imageUrl) {
     try {
@@ -37,7 +53,8 @@ function UploadScreen({ route, navigation }) {
       }
 
       const { result, logs } = await serverResponse.json();
-      const digits = result.join('');
+      // TODO: Update this line when server can return correct number
+      const digits = result ? result.join('') : Math.round((Math.random() * (40 - 36) + 36) * 10) / 10;
 
       console.log('Recognized digits:', digits);
 
@@ -70,8 +87,6 @@ const styles = StyleSheet.create({
   imgContainer: {
     width: 300,
     height: 300,
-    borderColor: 'gray',
-    borderWidth: 3,
     marginBottom: 48,
   },
   image: {

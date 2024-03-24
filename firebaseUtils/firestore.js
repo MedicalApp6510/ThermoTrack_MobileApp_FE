@@ -87,12 +87,12 @@ export async function writeImageToDB(image) {
   }
 }
 
-// export function getCurrentUserEmail() {
-//   try {
-//     const user = auth.currentUser;
+export function getCurrentUserEmail() {
+  try {
+    const user = auth.currentUser;
 
-//     return user ? user.email : "";
-//   } catch (err) {
-//     console.log(err);
-//   }
-// }
+    return user ? user.email : "";
+  } catch (err) {
+    console.log(err);
+  }
+}
