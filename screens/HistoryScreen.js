@@ -6,7 +6,7 @@ import { db, auth } from "../firebaseUtils/firebaseSetup";
 import { getCurrentUserEmail } from "../firebaseUtils/firestore";
 
 function HistoryScreen({ navigation }) {
-  
+
   const [user, setUser] = useState(null);
   useEffect(() => {
     const docRef = doc(db, "users", getCurrentUserEmail());
@@ -49,7 +49,7 @@ function HistoryScreen({ navigation }) {
   }) : [];
 
   return (
-    <ScrollView style={[styles.container, { backgroundColor: colors.primary }]}>
+    <View style={[styles.container, { backgroundColor: colors.primary }]}>
       {/* User Information */}
       <View style={styles.userInfoContainer}>
         <Title style={styles.userInfoTitle}>Hello, {getCurrentUserEmail()}!</Title>
@@ -60,7 +60,7 @@ function HistoryScreen({ navigation }) {
         {/* History */}
         <View style={styles.historyContainer}>
           <Title style={[styles.historyTitle, { color: colors.primary }]}>History Data</Title>
-          <View style={[styles.historyListContainer, { backgroundColor: colors.surfaceVariant }]}>
+          <ScrollView style={[styles.historyListContainer, { backgroundColor: colors.surfaceVariant }]}>
             {historyData.map((item, index) => (
               <View key={item.id} style={styles.historyItem}>
                 <View style={styles.historyItemLeft}>
@@ -73,7 +73,7 @@ function HistoryScreen({ navigation }) {
                 {index !== historyData.length - 1 && <Divider />}
               </View>
             ))}
-          </View>
+          </ScrollView>
         </View>
 
         {/* Logout Button */}
@@ -83,7 +83,7 @@ function HistoryScreen({ navigation }) {
           </Button>
         </View>
       </View>
-    </ScrollView>
+    </View>
   );
 }
 
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   userInfoContainer: {
-    height: '50%',
+    height: '30%',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -121,6 +121,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     backgroundColor: 'white',
     borderRadius: 8,
+    height: 320,
   },
   historyItem: {
     flexDirection: 'row',

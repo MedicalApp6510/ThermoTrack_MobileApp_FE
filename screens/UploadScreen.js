@@ -1,14 +1,14 @@
 import React, {useEffect, useState} from 'react';
-import { View, StyleSheet, Image, Text } from 'react-native';
+import {View, StyleSheet, Image, Text} from 'react-native';
 import {getCurrentUserEmail, updateToDB, writeImageToDB, writeToDB} from "../firebaseUtils/firestore";
-import { REACT_APP_SERVER_URL } from "@env";
+import {REACT_APP_SERVER_URL} from "@env";
 
-function UploadScreen({ route, navigation }) {
-  const { imageUri } = route.params;
-  const mockDigit= "33.3";
+function UploadScreen({route, navigation}) {
+  const {imageUri} = route.params;
+  const mockDigit = "33.3";
 
 
-  useEffect( () => {
+  useEffect(() => {
     const uploadImage = async () => {
       const url = await writeImageToDB(imageUri);
       await writeToDB({imgUrl: url}, "images");
@@ -31,28 +31,28 @@ function UploadScreen({ route, navigation }) {
       };
       await updateToDB(getCurrentUserEmail(), "users", newTemperatureEntry);
 
-    // Navigate to the SuccessScreen
-    navigation.navigate('Success', { digit: digits, isSuccessful: true});
-  };
+      // Navigate to the SuccessScreen
+      navigation.navigate('Success', {digit: digits, isSuccessful: true});
+    };
 
     uploadImage();
   }, [imageUri]);
 
   async function callImageRecognitionServer(imageUrl) {
     try {
-      const serverResponse = await fetch(REACT_APP_SERVER_URL, {
+      const serverResponse = await fetch(process.env.REACT_APP_SERVER_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ imageUrl: imageUrl }),
+        body: JSON.stringify({imageUrl: imageUrl}),
       });
 
       if (!serverResponse.ok) {
         throw new Error(`Server response was not ok: ${serverResponse.status}`);
       }
 
-      const { result, logs } = await serverResponse.json();
+      const {result, logs} = await serverResponse.json();
       // TODO: Update this line when server can return correct number
       const digits = result ? result.join('') : Math.round((Math.random() * (40 - 36) + 36) * 10) / 10;
 
@@ -70,7 +70,7 @@ function UploadScreen({ route, navigation }) {
   return (
     <View style={styles.container}>
       <View style={styles.imgContainer}>
-        <Image source={{ uri: imageUri }} style={styles.image} />
+        <Image source={{uri: imageUri}} style={styles.image}/>
       </View>
       <Text style={styles.text}>Sending to the server and analyzing the image...</Text>
     </View>
