@@ -4,10 +4,17 @@ import { Title, Button, Divider, Paragraph, useTheme } from 'react-native-paper'
 import { doc, onSnapshot } from "firebase/firestore";
 import { db, auth } from "../firebaseUtils/firebaseSetup";
 import { getCurrentUserEmail } from "../firebaseUtils/firestore";
+import { TabView, TabBar } from 'react-native-tab-view';
 
 function HistoryScreen({ navigation }) {
 
   const [user, setUser] = useState(null);
+  const [index, setIndex] = useState(0);
+  const [routes] = useState([
+    { key: 'first', title: 'List' },
+    { key: 'second', title: 'Chart' },
+  ]);
+
   useEffect(() => {
     const docRef = doc(db, "users", getCurrentUserEmail());
     const unSubscribe = onSnapshot(docRef, (snapshot) => {
@@ -48,6 +55,42 @@ function HistoryScreen({ navigation }) {
     return b.id - a.id;
   }) : [];
 
+
+  const FirstRoute = () => (
+    <ScrollView style={[styles.historyListContainer, { backgroundColor: colors.surfaceVariant }]}>
+      {historyData.map((item, index) => (
+        <View key={item.id} style={styles.historyItem}>
+          <View style={styles.historyItemLeft}>
+            <Paragraph style={{color: colors.onSurfaceVariant}}>{item.timestamp}</Paragraph>
+          </View>
+          <View style={styles.historyItemRight}>
+            <Paragraph style={styles.temperatureText}>{item.temperature}°C</Paragraph>
+          </View>
+          {/* Render gray divider line if not the last item */}
+          {index !== historyData.length - 1 && <Divider />}
+        </View>
+      ))}
+    </ScrollView>
+  );
+
+  const SecondRoute = () => (
+    // 这里调用你的折线图组件，假设它接受historyData作为props
+    // <LineChartComponent data={historyData} />
+    <View></View>
+  );
+
+  const renderScene = ({ route }) => {
+    switch (route.key) {
+      case 'first':
+        return <FirstRoute />;
+      case 'second':
+        return <SecondRoute />;
+      default:
+        return null;
+    }
+  };
+
+
   return (
     <View style={[styles.container, { backgroundColor: colors.primary }]}>
       {/* User Information */}
@@ -60,21 +103,21 @@ function HistoryScreen({ navigation }) {
         {/* History */}
         <View style={styles.historyContainer}>
           <Title style={[styles.historyTitle, { color: colors.primary }]}>History Data</Title>
-          <ScrollView style={[styles.historyListContainer, { backgroundColor: colors.surfaceVariant }]}>
-            {historyData.map((item, index) => (
-              <View key={item.id} style={styles.historyItem}>
-                <View style={styles.historyItemLeft}>
-                  <Paragraph style={{color: colors.onSurfaceVariant}}>{item.timestamp}</Paragraph>
-                </View>
-                <View style={styles.historyItemRight}>
-                  <Paragraph style={styles.temperatureText}>{item.temperature}°C</Paragraph>
-                </View>
-                {/* Render gray divider line if not the last item */}
-                {index !== historyData.length - 1 && <Divider />}
-              </View>
-            ))}
-          </ScrollView>
         </View>
+        <TabView
+          navigationState={{ index, routes }}
+          renderScene={renderScene}
+          onIndexChange={setIndex}
+          initialLayout={{ width: '100%', height: '100%'}}
+          renderTabBar={props => (
+            <TabBar
+              {...props}
+              indicatorStyle={{ backgroundColor: colors.primary }}
+              labelStyle={{ color: colors.primary }}
+              style={{ backgroundColor: colors.background }} />
+          )}
+        />
+
 
         {/* Logout Button */}
         <View style={styles.logoutContainer}>
@@ -105,10 +148,13 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   contentsContainer: {
-    height: '200%',
+    // height: '200%',
+    flex: 1,
     padding: 10,
-    borderRadius: 48,
     backgroundColor: '#ffffff',
+    height: "70%",
+    borderTopLeftRadius: 48,
+    borderTopRightRadius: 48,
   },
   historyContainer: {
     padding: 16,
@@ -121,7 +167,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     backgroundColor: 'white',
     borderRadius: 8,
-    height: 320,
+    height: 400,
   },
   historyItem: {
     flexDirection: 'row',
