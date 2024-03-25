@@ -108,7 +108,8 @@ function HistoryScreen({ navigation }) {
           navigationState={{ index, routes }}
           renderScene={renderScene}
           onIndexChange={setIndex}
-          initialLayout={{ width: '100%', height: '100%'}}
+          // initialLayout={{ width: '100%', height: '100%'}}
+          initialLayout={{ width: 10, height: 10 }}
           renderTabBar={props => (
             <TabBar
               {...props}
