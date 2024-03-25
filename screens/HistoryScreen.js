@@ -5,6 +5,7 @@ import { doc, onSnapshot } from "firebase/firestore";
 import { db, auth } from "../firebaseUtils/firebaseSetup";
 import { getCurrentUserEmail } from "../firebaseUtils/firestore";
 import { TabView, TabBar } from 'react-native-tab-view';
+import LineChartComponent from './LineChartComponent';
 
 function HistoryScreen({ navigation }) {
 
@@ -74,9 +75,8 @@ function HistoryScreen({ navigation }) {
   );
 
   const SecondRoute = () => (
-    // 这里调用你的折线图组件，假设它接受historyData作为props
-    // <LineChartComponent data={historyData} />
-    <View></View>
+
+    <LineChartComponent data={historyData} />
   );
 
   const renderScene = ({ route }) => {
@@ -117,8 +117,6 @@ function HistoryScreen({ navigation }) {
               style={{ backgroundColor: colors.background }} />
           )}
         />
-
-
         {/* Logout Button */}
         <View style={styles.logoutContainer}>
           <Button mode="contained" onPress={handleLogout} style={styles.logoutButton}>
