@@ -74,10 +74,18 @@ function HistoryScreen({ navigation }) {
     </ScrollView>
   );
 
-  const SecondRoute = () => (
 
-    <LineChartComponent data={historyData} />
-  );
+  const SecondRoute = () => {
+    const isDataValid = historyData.length > 0 && historyData.every(item => item.timestamp && item.temperature);
+
+    if (!isDataValid) {
+      return <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <Paragraph>Loading...</Paragraph>
+      </View>;
+    }
+
+    return <LineChartComponent data={historyData} />;
+  };
 
   const renderScene = ({ route }) => {
     switch (route.key) {
