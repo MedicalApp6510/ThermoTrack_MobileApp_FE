@@ -4,6 +4,7 @@ import {getCurrentUserEmail, updateToDB, writeImageToDB, writeToDB} from "../fir
 import {REACT_APP_SERVER_URL} from "@env";
 
 function UploadScreen({route, navigation}) {
+  console.log('Server URL:', REACT_APP_SERVER_URL);
   const {imageUri} = route.params;
   const mockDigit = "33.3";
 
@@ -52,10 +53,8 @@ function UploadScreen({route, navigation}) {
         throw new Error(`Server response was not ok: ${serverResponse.status}`);
       }
 
-      const {result, logs} = await serverResponse.json();
-      // TODO: Update this line when server can return correct number
-      const digits = result ? result.join('') : Math.round((Math.random() * (40 - 36) + 36) * 10) / 10;
-
+      const responseData = await serverResponse.json();
+      const digits = responseData.number; // 直接使用后端返回的数字
       console.log('Recognized digits:', digits);
 
       return digits;
