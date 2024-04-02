@@ -52,9 +52,9 @@ function UploadScreen({route, navigation}) {
         throw new Error(`Server response was not ok: ${serverResponse.status}`);
       }
 
-      const {result, logs} = await serverResponse.json();
+      const {number, logs} = await serverResponse.json();
 
-      const digits = !isNaN(result) ? parseFloat(result) : Math.round((Math.random() * (39 - 36) + 36) * 10) / 10;
+      const digits = !isNaN(number) ? parseFloat(number) : NaN;
 
       console.log('Recognized digits:', digits);
 
