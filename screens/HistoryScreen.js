@@ -4,10 +4,24 @@ import { Title, Button, Divider, Paragraph, useTheme } from 'react-native-paper'
 import { doc, onSnapshot } from "firebase/firestore";
 import { db, auth } from "../firebaseUtils/firebaseSetup";
 import { getCurrentUserEmail } from "../firebaseUtils/firestore";
+import { TabView, TabBar } from 'react-native-tab-view';
+import LineChartComponent from './LineChartComponent';
+
+function getUserName(userEmail) {
+  const atIndex = userEmail.indexOf('@');
+  const username = atIndex !== -1 ? userEmail.substring(0, atIndex) : userEmail;
+  return username.charAt(0).toUpperCase() + username.slice(1);
+}
 
 function HistoryScreen({ navigation }) {
-  
+
   const [user, setUser] = useState(null);
+  const [index, setIndex] = useState(0);
+  const [routes] = useState([
+    { key: 'first', title: 'List' },
+    { key: 'second', title: 'Chart' },
+  ]);
+
   useEffect(() => {
     const docRef = doc(db, "users", getCurrentUserEmail());
     const unSubscribe = onSnapshot(docRef, (snapshot) => {
@@ -48,11 +62,54 @@ function HistoryScreen({ navigation }) {
     return b.id - a.id;
   }) : [];
 
+
+  const FirstRoute = () => (
+    <ScrollView style={[styles.historyListContainer, { backgroundColor: colors.surfaceVariant }]}>
+      {historyData.map((item, index) => (
+        <View key={item.id} style={styles.historyItem}>
+          <View style={styles.historyItemLeft}>
+            <Paragraph style={{color: colors.onSurfaceVariant}}>{item.timestamp}</Paragraph>
+          </View>
+          <View style={styles.historyItemRight}>
+            <Paragraph style={styles.temperatureText}>{item.temperature}°C</Paragraph>
+          </View>
+          {/* Render gray divider line if not the last item */}
+          {index !== historyData.length - 1 && <Divider />}
+        </View>
+      ))}
+    </ScrollView>
+  );
+
+
+  const SecondRoute = () => {
+    const isDataValid = historyData.length > 0 && historyData.every(item => item.timestamp && item.temperature);
+
+    if (!isDataValid) {
+      return <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <Paragraph>Loading...</Paragraph>
+      </View>;
+    }
+
+    return <LineChartComponent data={historyData} />;
+  };
+
+  const renderScene = ({ route }) => {
+    switch (route.key) {
+      case 'first':
+        return <FirstRoute />;
+      case 'second':
+        return <SecondRoute />;
+      default:
+        return null;
+    }
+  };
+
+
   return (
-    <ScrollView style={[styles.container, { backgroundColor: colors.primary }]}>
+    <View style={[styles.container, { backgroundColor: colors.primary }]}>
       {/* User Information */}
       <View style={styles.userInfoContainer}>
-        <Title style={styles.userInfoTitle}>Hello, {getCurrentUserEmail()}!</Title>
+        <Title style={styles.userInfoTitle}>Hello, {getUserName(getCurrentUserEmail())}!</Title>
       </View>
 
       {/* Contents */}
@@ -60,22 +117,21 @@ function HistoryScreen({ navigation }) {
         {/* History */}
         <View style={styles.historyContainer}>
           <Title style={[styles.historyTitle, { color: colors.primary }]}>History Data</Title>
-          <View style={[styles.historyListContainer, { backgroundColor: colors.surfaceVariant }]}>
-            {historyData.map((item, index) => (
-              <View key={item.id} style={styles.historyItem}>
-                <View style={styles.historyItemLeft}>
-                  <Paragraph style={{color: colors.onSurfaceVariant}}>{item.timestamp}</Paragraph>
-                </View>
-                <View style={styles.historyItemRight}>
-                  <Paragraph style={styles.temperatureText}>{item.temperature}°C</Paragraph>
-                </View>
-                {/* Render gray divider line if not the last item */}
-                {index !== historyData.length - 1 && <Divider />}
-              </View>
-            ))}
-          </View>
         </View>
-
+        <TabView
+          navigationState={{ index, routes }}
+          renderScene={renderScene}
+          onIndexChange={setIndex}
+          // initialLayout={{ width: '100%', height: '100%'}}
+          initialLayout={{ width: 10, height: 10 }}
+          renderTabBar={props => (
+            <TabBar
+              {...props}
+              indicatorStyle={{ backgroundColor: colors.primary }}
+              labelStyle={{ color: colors.primary }}
+              style={{ backgroundColor: colors.background }} />
+          )}
+        />
         {/* Logout Button */}
         <View style={styles.logoutContainer}>
           <Button mode="contained" onPress={handleLogout} style={styles.logoutButton}>
@@ -83,7 +139,7 @@ function HistoryScreen({ navigation }) {
           </Button>
         </View>
       </View>
-    </ScrollView>
+    </View>
   );
 }
 
@@ -92,7 +148,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   userInfoContainer: {
-    height: '50%',
+    height: '30%',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -105,10 +161,13 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   contentsContainer: {
-    height: '200%',
+    // height: '200%',
+    flex: 1,
     padding: 10,
-    borderRadius: 48,
     backgroundColor: '#ffffff',
+    height: "70%",
+    borderTopLeftRadius: 48,
+    borderTopRightRadius: 48,
   },
   historyContainer: {
     padding: 16,
@@ -121,6 +180,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     backgroundColor: 'white',
     borderRadius: 8,
+    height: 400,
   },
   historyItem: {
     flexDirection: 'row',

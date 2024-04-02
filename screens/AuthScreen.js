@@ -6,6 +6,7 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { auth } from "../firebaseUtils/firebaseSetup";
+import {writeToDB} from "../firebaseUtils/firestore";
 
 function AuthScreen({ navigation }) {
   const [isLogin, setIsLogin] = useState(true);
@@ -18,7 +19,7 @@ function AuthScreen({ navigation }) {
     if (isLogin) {
       console.log('Login with:', email, password);
       signInWithEmailAndPassword(auth, email, password)
-        .then(() => 
+        .then(() =>
           navigation.navigate('Main'))
         .catch((error) => {
           const errorCode = error.code;
@@ -58,7 +59,7 @@ function AuthScreen({ navigation }) {
     } else {
       console.log('Register with:', email, password, confirmPassword);
       createUserWithEmailAndPassword(auth, email, password)
-        .then(() => 
+        .then(() =>
           navigation.navigate('Main')
         ).catch((error) => {
           const errorCode = error.code;
