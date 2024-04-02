@@ -4,6 +4,7 @@ import {getCurrentUserEmail, updateToDB, writeImageToDB, writeToDB} from "../fir
 import {REACT_APP_SERVER_URL} from "@env";
 
 function UploadScreen({route, navigation}) {
+  console.log('Server URL:', REACT_APP_SERVER_URL);
   const {imageUri} = route.params;
   const mockDigit = "33.3";
 
@@ -52,9 +53,8 @@ function UploadScreen({route, navigation}) {
         throw new Error(`Server response was not ok: ${serverResponse.status}`);
       }
 
-      const {result, logs} = await serverResponse.json();
-
-      const digits = !isNaN(result) ? parseFloat(result) : Math.round((Math.random() * (39 - 36) + 36) * 10) / 10;
+      const responseData = await serverResponse.json();
+      const digits = responseData.number;
 
       console.log('Recognized digits:', digits);
 
@@ -68,12 +68,12 @@ function UploadScreen({route, navigation}) {
 
 
   return (
-    <View style={styles.container}>
-      <View style={styles.imgContainer}>
-        <Image source={{uri: imageUri}} style={styles.image}/>
+      <View style={styles.container}>
+        <View style={styles.imgContainer}>
+          <Image source={{uri: imageUri}} style={styles.image}/>
+        </View>
+        <Text style={styles.text}>Sending to the server and analyzing the image...</Text>
       </View>
-      <Text style={styles.text}>Sending to the server and analyzing the image...</Text>
-    </View>
   );
 }
 
