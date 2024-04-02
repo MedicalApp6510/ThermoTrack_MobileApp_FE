@@ -7,6 +7,12 @@ import { getCurrentUserEmail } from "../firebaseUtils/firestore";
 import { TabView, TabBar } from 'react-native-tab-view';
 import LineChartComponent from './LineChartComponent';
 
+function getUserName(userEmail) {
+  const atIndex = userEmail.indexOf('@');
+  const username = atIndex !== -1 ? userEmail.substring(0, atIndex) : userEmail;
+  return username.charAt(0).toUpperCase() + username.slice(1);
+}
+
 function HistoryScreen({ navigation }) {
 
   const [user, setUser] = useState(null);
@@ -103,7 +109,7 @@ function HistoryScreen({ navigation }) {
     <View style={[styles.container, { backgroundColor: colors.primary }]}>
       {/* User Information */}
       <View style={styles.userInfoContainer}>
-        <Title style={styles.userInfoTitle}>Hello, {getCurrentUserEmail()}!</Title>
+        <Title style={styles.userInfoTitle}>Hello, {getUserName(getCurrentUserEmail())}!</Title>
       </View>
 
       {/* Contents */}

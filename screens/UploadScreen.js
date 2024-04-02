@@ -55,6 +55,7 @@ function UploadScreen({route, navigation}) {
 
       const responseData = await serverResponse.json();
       const digits = responseData.number;
+
       console.log('Recognized digits:', digits);
 
       return digits;

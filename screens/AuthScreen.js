@@ -45,7 +45,7 @@ function AuthScreen({ navigation }) {
               setPassword("");
               setConfirmPassword("");
               break;
-            case "auth/wrong-password":
+            case "auth/invalid-credential":
               errorMessage = "Wrong password. Please try again.";
               setPassword("");
               setConfirmPassword("");
