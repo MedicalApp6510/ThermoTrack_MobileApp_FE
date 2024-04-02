@@ -64,7 +64,7 @@ export async function deleteFromDB(key, collectionName) {
 
 export async function updateToDB(key, collectionName, changingDict) {
   try {
-    return await updateDoc(doc(db, collectionName, key), changingDict);
+    return await setDoc(doc(db, collectionName, key), changingDict, {merge: true});
   } catch (err) {
     console.log(err);
   }
