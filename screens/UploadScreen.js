@@ -54,7 +54,7 @@ function UploadScreen({route, navigation}) {
       }
 
       const responseData = await serverResponse.json();
-      const digits = responseData.number; // 直接使用后端返回的数字
+      const digits = responseData.number;
       console.log('Recognized digits:', digits);
 
       return digits;
@@ -67,12 +67,12 @@ function UploadScreen({route, navigation}) {
 
 
   return (
-    <View style={styles.container}>
-      <View style={styles.imgContainer}>
-        <Image source={{uri: imageUri}} style={styles.image}/>
+      <View style={styles.container}>
+        <View style={styles.imgContainer}>
+          <Image source={{uri: imageUri}} style={styles.image}/>
+        </View>
+        <Text style={styles.text}>Sending to the server and analyzing the image...</Text>
       </View>
-      <Text style={styles.text}>Sending to the server and analyzing the image...</Text>
-    </View>
   );
 }
 
