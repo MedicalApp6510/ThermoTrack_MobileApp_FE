@@ -53,8 +53,8 @@ function UploadScreen({route, navigation}) {
       }
 
       const {result, logs} = await serverResponse.json();
-      // TODO: Update this line when server can return correct number
-      const digits = result ? result.join('') : Math.round((Math.random() * (40 - 36) + 36) * 10) / 10;
+
+      const digits = !isNaN(result) ? parseFloat(result) : Math.round((Math.random() * (39 - 36) + 36) * 10) / 10;
 
       console.log('Recognized digits:', digits);
 
