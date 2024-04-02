@@ -16,6 +16,12 @@ function UploadScreen({route, navigation}) {
       console.log("upload url  " + url);
       const digits = await callImageRecognitionServer(url);
       console.log('Digits: ', digits);
+
+      if (isNaN(digits)) {
+        // Navigate to the SuccessScreen with failure status if it can't be recognized.
+        navigation.navigate('Success', {isSuccessful: false});
+        return;
+      }
       const currentTime = new Date();
       const options = {
         year: 'numeric',
