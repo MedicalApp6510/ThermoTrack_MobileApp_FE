@@ -6,7 +6,7 @@ import { Alert, Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { Button, useTheme } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 
-export default function HomeImagePicker( ) {
+export default function HomeImagePicker({tempUnit}) {
   const navigation = useNavigation();
   const { colors } = useTheme();
 
@@ -26,7 +26,7 @@ export default function HomeImagePicker( ) {
 
       if (!result.canceled) {
         console.log(result.assets[0].uri);
-        navigation.navigate('Upload', { imageUri: result.assets[0].uri });
+        navigation.navigate('Upload', { imageUri: result.assets[0].uri, tempUnit });
       }
     } catch (e) {
       Alert.alert("Error", "Unable to pick image");

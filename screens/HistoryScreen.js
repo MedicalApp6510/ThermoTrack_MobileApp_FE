@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import { View, StyleSheet, ScrollView, Alert } from 'react-native';
 import { Title, Button, Divider, Paragraph, useTheme } from 'react-native-paper';
 import { doc, onSnapshot } from "firebase/firestore";
@@ -6,6 +6,7 @@ import { db, auth } from "../firebaseUtils/firebaseSetup";
 import { getCurrentUserEmail } from "../firebaseUtils/firestore";
 import { TabView, TabBar } from 'react-native-tab-view';
 import LineChartComponent from './LineChartComponent';
+import AppContext from '../context/AppContext.js';
 
 function getUserName(userEmail) {
   const atIndex = userEmail.indexOf('@');
@@ -21,6 +22,7 @@ function HistoryScreen({ navigation }) {
     { key: 'first', title: 'List' },
     { key: 'second', title: 'Chart' },
   ]);
+  const {tempUnit} = useContext(AppContext);
 
   useEffect(() => {
     const docRef = doc(db, "users", getCurrentUserEmail());
@@ -57,7 +59,7 @@ function HistoryScreen({ navigation }) {
   const historyData = user ? Object.keys(user).map((key) => ({
     id: key,
     timestamp: user[key].timestamp,
-    temperature: user[key].temperature,
+    temperature: tempUnit === 'C' ? user[key].temperature : ((parseFloat(user[key].temperature) * 1.8) + 32).toFixed(1),
   })).sort((a, b) => {
     return b.id - a.id;
   }) : [];
@@ -71,7 +73,7 @@ function HistoryScreen({ navigation }) {
             <Paragraph style={{color: colors.onSurfaceVariant}}>{item.timestamp}</Paragraph>
           </View>
           <View style={styles.historyItemRight}>
-            <Paragraph style={styles.temperatureText}>{item.temperature}°C</Paragraph>
+            <Paragraph style={styles.temperatureText}>{item.temperature}°{tempUnit}</Paragraph>
           </View>
           {/* Render gray divider line if not the last item */}
           {index !== historyData.length - 1 && <Divider />}

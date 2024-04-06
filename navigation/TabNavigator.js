@@ -7,6 +7,7 @@ import HomeScreen from '../screens/HomeScreen.js';
 import HistoryScreen from '../screens/HistoryScreen.js';
 import UploadScreen from '../screens/UploadScreen.js';
 import SuccessScreen from '../screens/SuccessScreen.js';
+import AskAiScreen from '../screens/AskAiScreen.js';
 
 const Tab = createBottomTabNavigator();
 
@@ -29,6 +30,17 @@ function TabNavigator() {
           headerShown: false,
           tabBarIcon: ({ color, size }) => (
             <Icon name="home" color={color} size={size} />
+          ),
+        }} 
+      />
+      {/* Ask AI tab */}
+      <Tab.Screen 
+        name="Ask AI" 
+        component={AskAiScreen} 
+        options={{
+          headerShown: false,
+          tabBarIcon: ({ color, size }) => (
+            <Icon name="chat" color={color} size={size} />
           ),
         }} 
       />

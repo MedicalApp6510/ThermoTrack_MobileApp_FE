@@ -5,9 +5,7 @@ import {REACT_APP_SERVER_URL} from "@env";
 
 function UploadScreen({route, navigation}) {
   console.log('Server URL:', REACT_APP_SERVER_URL);
-  const {imageUri} = route.params;
-  const mockDigit = "33.3";
-
+  const {imageUri, tempUnit} = route.params;
 
   useEffect(() => {
     const uploadImage = async () => {
@@ -33,7 +31,7 @@ function UploadScreen({route, navigation}) {
       };
       const newTemperatureEntry = {};
       newTemperatureEntry[Math.floor(currentTime.getTime() / 1000)] = {
-        temperature: digits,
+        temperature: tempUnit === 'C' ? digits : (parseFloat(digits) - 32) / 1.8,
         timestamp: new Intl.DateTimeFormat('en-US', options).format(currentTime)
       };
       await updateToDB(getCurrentUserEmail(), "users", newTemperatureEntry);

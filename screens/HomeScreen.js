@@ -1,16 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
-import { useTheme } from 'react-native-paper';
-import { data } from '../mockHistoryData';
+import { useTheme, SegmentedButtons } from 'react-native-paper';
 import HomeImagePicker from './imagePicker.js';
 import { doc, onSnapshot } from "firebase/firestore";
 import { db, auth } from "../firebaseUtils/firebaseSetup";
 import { getCurrentUserEmail } from "../firebaseUtils/firestore";
+import AppContext from '../context/AppContext.js';
+
+function getDisplayTemperature(temperature, tempUnit) {
+  if (tempUnit === 'F') {
+    return (temperature * 1.8) + 32;
+  }
+  return temperature
+}
 
 function HomeScreen({ navigation }) {
   const { colors } = useTheme();
 
   const [user, setUser] = useState(null);
+  const {tempUnit, setTempUnit} = useContext(AppContext);
   useEffect(() => {
     const docRef = doc(db, "users", getCurrentUserEmail());
     const unSubscribe = onSnapshot(docRef, (snapshot) => {
@@ -24,7 +32,7 @@ function HomeScreen({ navigation }) {
   const historyData = user ? Object.keys(user).map((key) => ({
     id: key,
     timestamp: user[key].timestamp,
-    temperature: user[key].temperature,
+    temperature: parseFloat(user[key].temperature),
   })) : [];
   const latestTemperature = historyData.length > 0 ? historyData.at(-1).temperature : null;
   const latestTimestamp = historyData.length > 0 ? historyData.at(-1).timestamp : null;
@@ -39,15 +47,32 @@ function HomeScreen({ navigation }) {
       {/* Middle: Latest history data value */}
       <View style={styles.temperatureContainer}>
         <View style={[styles.temperatureCircle, { borderColor: colors.primaryContainer }]}>
-          <Text style={[styles.temperatureText, { color: colors.background }]}>{latestTemperature || 'Null'} °C</Text>
+          <Text style={[styles.temperatureText, { color: colors.background }]}>{getDisplayTemperature(latestTemperature, tempUnit) || 'Null'} °{tempUnit}</Text>
         </View>
         <Text style={[styles.lastUpdatedText, { color: colors.primaryContainer }]}>Last updated: {latestTimestamp || 'Unknown'}</Text>
+      </View>
+
+      <View style={styles.temperatureUnitContainer}>
+        <SegmentedButtons
+          value={tempUnit}
+          onValueChange={setTempUnit}
+          buttons={[
+            {
+              value: 'C',
+              label: '°C',
+            },
+            {
+              value: 'F',
+              label: '°F',
+            },
+          ]}
+        />
       </View>
 
       {/* Bottom: Upload new data */}
       <View style={styles.buttonContainer}>
         {/* Image picker */}
-        <HomeImagePicker></HomeImagePicker>
+        <HomeImagePicker tempUnit={tempUnit}></HomeImagePicker>
       </View>
     </View>
   );
@@ -81,6 +106,10 @@ const styles = StyleSheet.create({
     borderWidth: 4,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  temperatureUnitContainer: {
+    paddingLeft: 120,
+    paddingRight: 136,
   },
   temperatureText: {
     fontSize: 48,
