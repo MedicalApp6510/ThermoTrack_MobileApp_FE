@@ -31,7 +31,7 @@ function UploadScreen({route, navigation}) {
       };
       const newTemperatureEntry = {};
       newTemperatureEntry[Math.floor(currentTime.getTime() / 1000)] = {
-        temperature: tempUnit === 'C' ? digits : (parseFloat(digits) - 32) / 1.8,
+        temperature: tempUnit === 'C' ? digits : ((parseFloat(digits) - 32) / 1.8).toFixed(1),
         timestamp: new Intl.DateTimeFormat('en-US', options).format(currentTime)
       };
       await updateToDB(getCurrentUserEmail(), "users", newTemperatureEntry);

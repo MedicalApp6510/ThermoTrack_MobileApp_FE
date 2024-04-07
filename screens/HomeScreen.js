@@ -39,10 +39,29 @@ function HomeScreen({ navigation }) {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.primary }]}>
-      {/* Top: Text */}
+      {/* Set Temperature Unit */}
       <View style={styles.topContainer}>
-        <Text style={styles.topTitle}>How are you today?</Text>
+        <View style={styles.temperatureUnitContainer}>
+          <SegmentedButtons
+            value={tempUnit}
+            onValueChange={setTempUnit}
+            buttons={[
+              {
+                value: 'C',
+                label: '°C',
+                style: {borderColor: colors.primaryContainer}
+              },
+              {
+                value: 'F',
+                label: '°F',
+                style: {borderColor: colors.primaryContainer}
+              },
+            ]}
+            density={'small'}
+          />
+        </View>
       </View>
+
 
       {/* Middle: Latest history data value */}
       <View style={styles.temperatureContainer}>
@@ -50,23 +69,6 @@ function HomeScreen({ navigation }) {
           <Text style={[styles.temperatureText, { color: colors.background }]}>{getDisplayTemperature(latestTemperature, tempUnit) || 'Null'} °{tempUnit}</Text>
         </View>
         <Text style={[styles.lastUpdatedText, { color: colors.primaryContainer }]}>Last updated: {latestTimestamp || 'Unknown'}</Text>
-      </View>
-
-      <View style={styles.temperatureUnitContainer}>
-        <SegmentedButtons
-          value={tempUnit}
-          onValueChange={setTempUnit}
-          buttons={[
-            {
-              value: 'C',
-              label: '°C',
-            },
-            {
-              value: 'F',
-              label: '°F',
-            },
-          ]}
-        />
       </View>
 
       {/* Bottom: Upload new data */}
@@ -108,7 +110,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   temperatureUnitContainer: {
-    paddingLeft: 120,
+    paddingLeft: 90,
     paddingRight: 136,
   },
   temperatureText: {

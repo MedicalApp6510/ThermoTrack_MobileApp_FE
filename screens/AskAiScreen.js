@@ -1,13 +1,26 @@
-import React, { useState } from 'react';
-import { View, TextInput, Button, Text, ScrollView, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, ScrollView, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
 import OpenAI from 'openai';
-import { useTheme } from 'react-native-paper';
+import { doc, onSnapshot } from "firebase/firestore";
+import { db, auth } from "../firebaseUtils/firebaseSetup";
+import { useTheme, TextInput, IconButton } from 'react-native-paper';
+import { getCurrentUserEmail } from "../firebaseUtils/firestore";
 import {REACT_APP_OPENAI_SECRET_KEY} from "@env";
 
 const AskAiScreen = () => {
   const [inputText, setInputText] = useState('');
   const [chatHistory, setChatHistory] = useState([]);
+  const [user, setUser] = useState(null);
   const { colors } = useTheme();
+
+  useEffect(() => {
+    const docRef = doc(db, "users", getCurrentUserEmail());
+    const unSubscribe = onSnapshot(docRef, (snapshot) => {
+      setUser(snapshot.data());
+    });
+
+    return () => unSubscribe();
+  }, []);
 
   // Initialize OpenAI API instance with your API key
   const openai = new OpenAI({
@@ -22,11 +35,13 @@ const AskAiScreen = () => {
       setInputText('');
       // Call OpenAI API to generate AI response
       try {
+        const prompt = 
+            `Assume you are a medical AI and try to answer the patient's problem. The patient's recent temperature and time, ${Object.keys(user).map((key) => (`time: ${user[key].timestamp}, temperature: ${parseFloat(user[key].temperature)}°C, `)).join(', ')}, here is my question: ${inputText.trim()}`;
         const response = await openai.chat.completions.create({
             model: 'gpt-3.5-turbo',
             messages: [
                 { role: "system", content: "AI" },
-                { role: 'user', content: inputText.trim() }
+                { role: 'user', content: prompt }
             ],
           });
         // Add AI response to chat history
@@ -45,14 +60,14 @@ const AskAiScreen = () => {
       </View>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={{ flex: 1, padding: 10 }}
+        style={{ flex: 1, padding: 10, backgroundColor: colors.background }}
         keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
       >
         {/* Chat dialog */}
-        <ScrollView contentContainerStyle={styles.chatContainer}>
+        <ScrollView contentContainerStyle={[styles.chatContainer, { backgroundColor: colors.background }]}>
           {chatHistory.map((chat, index) => (
             <View key={index} style={chat.type === 'user' ? styles.userChatBubble : styles.aiChatBubble}>
-              <Text>{chat.message}</Text>
+              <Text style={chat.type === 'user' ? styles.userChatText : styles.aiChatText}>{chat.message}</Text>
             </View>
           ))}
         </ScrollView>
@@ -60,11 +75,18 @@ const AskAiScreen = () => {
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.input}
+            mode='outlined'
             placeholder="Type a message..."
             value={inputText}
             onChangeText={setInputText}
+            outlineStyle={styles.inputOutLineStyle}
           />
-          <Button title="Send" onPress={handleSend} />
+          <IconButton 
+            onPress={handleSend}
+            icon="send"
+            disabled={!user}
+            iconColor={colors.primary}
+            containerColor={colors.primaryContainer}/>
         </View>
       </KeyboardAvoidingView>
     </View>
@@ -92,30 +114,34 @@ const styles = StyleSheet.create({
   },
   userChatBubble: {
     alignSelf: 'flex-end',
-    backgroundColor: '#DCF8C6',
+    backgroundColor: 'rgb(120, 69, 172)',
     padding: 10,
     marginVertical: 5,
     borderRadius: 10,
   },
   aiChatBubble: {
     alignSelf: 'flex-start',
-    backgroundColor: '#EAEAEA',
+    backgroundColor: 'rgb(240, 219, 255)',
     padding: 10,
     marginVertical: 5,
     borderRadius: 10,
   },
+  userChatText: {
+    color: 'white'
+  },
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 10,
+    marginVertical: 10,
   },
   input: {
     flex: 1,
     marginRight: 10,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-    paddingHorizontal: 10,
+    height: 48
+  },
+  inputOutLineStyle: {
+    borderColor:'rgb(120, 69, 172)', 
+    borderRadius: 12
   },
 });
 
