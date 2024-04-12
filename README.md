@@ -1,7 +1,7 @@
 ## Introduction
 **ThermoTrack: Your Smart Health Companion App!**
 
-Take control of your health with ThermoTrack, the innovative app designed to simplify how you monitor your body temperature. Whether you're feeling a bit under the weather or keeping tabs for fitness, ThermoTrack offers a seamless way to use your smartphone. **Just snap a photo or upload an image of your thermometer, and let ThermoTrack do the rest!**
+Take control of your health with ThermoTrack, the innovative cross-platform app designed to simplify how you monitor your body temperature. Whether you're feeling a bit under the weather or keeping tabs for fitness, ThermoTrack offers a seamless way to use your smartphone. **Just snap a photo or upload an image of your thermometer, and let ThermoTrack do the rest!**
 
 ### Key Features
 
@@ -14,6 +14,12 @@ Take control of your health with ThermoTrack, the innovative app designed to sim
 ThermoTrack is more than just a temperature tracker; it’s your personal health guide. Download now and start tracking your way to better health today!
 
 Experience the future of health monitoring with ThermoTrack—where convenience meets accuracy.
+
+### Technical Stack:
+
+Frontend: React Native for cross-platform mobile app development.
+Backend: Firebase for authentication, database, and storage solutions.
+AI Integration: OpenAI for conversational AI functionalities.
 
 ### Preview
 
