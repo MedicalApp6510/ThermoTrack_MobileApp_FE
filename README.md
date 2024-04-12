@@ -3,7 +3,7 @@
 
 Take control of your health with ThermoTrack, the innovative app designed to simplify how you monitor your body temperature. Whether you're feeling a bit under the weather or keeping tabs for fitness, ThermoTrack offers a seamless way to use your smartphone. **Just snap a photo or upload an image of your thermometer, and let ThermoTrack do the rest!**
 
-**Key Features:**
+### Key Features
 
 - **Capture and Upload:** Easily take pictures of your thermometer readings or upload existing photos to record your temperature instantly.
   
@@ -14,6 +14,13 @@ Take control of your health with ThermoTrack, the innovative app designed to sim
 ThermoTrack is more than just a temperature tracker; it’s your personal health guide. Download now and start tracking your way to better health today!
 
 Experience the future of health monitoring with ThermoTrack—where convenience meets accuracy.
+
+### Preview
+
+![IMG_0616](https://github.com/MedicalApp6510/MedicalApp_FE/assets/82356933/21c506b8-fdf9-44e5-9226-558c251cd07c)
+
+![IMG_0615](https://github.com/MedicalApp6510/MedicalApp_FE/assets/82356933/ba6d0793-a6e0-439b-8a92-2e58cf043d87)
+
 
 ## Start Here
 
