@@ -4,14 +4,14 @@ import {getCurrentUserEmail, updateToDB, writeImageToDB, writeToDB} from "../fir
 import {REACT_APP_SERVER_URL} from "@env";
 
 function UploadScreen({route, navigation}) {
-  console.log('Server URL:', REACT_APP_SERVER_URL);
+  // console.log('Server URL:', REACT_APP_SERVER_URL);
   const {imageUri, tempUnit} = route.params;
 
   useEffect(() => {
     const uploadImage = async () => {
       const url = await writeImageToDB(imageUri);
       await writeToDB({imgUrl: url}, "images");
-      console.log("upload url  " + url);
+      // console.log("upload url  " + url);
       const digits = await callImageRecognitionServer(url);
       console.log('Digits: ', digits);
 
