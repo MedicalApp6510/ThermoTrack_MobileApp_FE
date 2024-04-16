@@ -1,4 +1,4 @@
-import { Entypo } from "@expo/vector-icons";
+// import { Entypo } from "@expo/vector-icons";
 import { BottomSheet } from "@rneui/themed";
 import * as ImagePicker from "expo-image-picker";
 import React, { useState } from "react";
