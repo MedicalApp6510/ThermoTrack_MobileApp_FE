@@ -24,9 +24,9 @@ Experience the future of health monitoring with ThermoTrack—where convenience 
 
 ### Preview
 
-![IMG_0616](https://github.com/MedicalApp6510/MedicalApp_FE/assets/82356933/21c506b8-fdf9-44e5-9226-558c251cd07c)
+![IMG_0616](https://github.com/MedicalApp6510/ThermoTrack_MobileApp_FE/assets/82356933/21c506b8-fdf9-44e5-9226-558c251cd07c)
 
-![IMG_0615](https://github.com/MedicalApp6510/MedicalApp_FE/assets/82356933/ba6d0793-a6e0-439b-8a92-2e58cf043d87)
+![IMG_0615](https://github.com/MedicalApp6510/ThermoTrack_MobileApp_FE/assets/82356933/ba6d0793-a6e0-439b-8a92-2e58cf043d87)
 
 
 ## Start Here
@@ -90,3 +90,15 @@ Since this is a beta version, the app needs to be run in conjunction with the Ex
 ### Next Steps
 
 After setting up the app, you can begin to integrate more features or start testing the app's existing functionalities. Enjoy exploring and developing with ThermoTrack!
+
+## Future Prospects of Our Project
+
+Through our ongoing experiments and developments, our application's digital recognition capabilities have significantly expanded beyond merely reading temperatures from thermometers. We have successfully adapted our technology to also read heart rate data and medical barcodes. This advancement underscores our potential to further extend compatibility with an even broader array of medical devices in the future.
+
+Moreover, our "AskAI" service is transforming the app into a vital bridge between medical services and patients. This feature enriches the app's functionality, turning it from a simple data recorder into a comprehensive health assistant. 
+
+Looking ahead, we plan to enhance this service by incorporating more personalized elements. For instance, we aim to adjust normal temperature ranges based on individual user profiles, including factors like weight, height, and medical history.
+
+Additionally, we are looking to integrate extensive medical knowledge into the app. This will enable the app to analyze temperature trends and potentially identify disease patterns, alerting users to seek medical advice at early stages of illness which could be crucial for preventive health care.
+
+These developments will not only enhance user engagement but also significantly contribute to early disease detection and prevention, marking a new era of smart health assistance.
