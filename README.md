@@ -18,8 +18,8 @@ Experience the future of health monitoring with ThermoTrack—where convenience 
 ### Technical Stack:
 
 - Frontend: React Native for cross-platform mobile app development.
-- Computer Vision: OpenCV for accurate image analysis and temperature extraction.
-- Backend: Firebase for authentication, database, and storage solutions.
+- Computer Vision: OpenCV and paired with Python for accurate image analysis and temperature extraction.
+- Backend: Node.JS and Express as the basic framework. Firebase for authentication, database, and storage solutions.
 - AI Integration: OpenAI for intelligent, conversational health insights.
 
 ### Preview
