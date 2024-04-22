@@ -14,7 +14,7 @@ function getDisplayTemperature(temperature, tempUnit) {
   } else {
     result = temperature;
   }
-  return Number(result.toFixed(1));
+  return result;
 }
 
 function HomeScreen({ navigation }) {
