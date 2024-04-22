@@ -67,18 +67,25 @@ function HistoryScreen({ navigation }) {
 
   const FirstRoute = () => (
     <ScrollView style={[styles.historyListContainer, { backgroundColor: colors.surfaceVariant }]}>
-      {historyData.map((item, index) => (
-        <View key={item.id} style={styles.historyItem}>
-          <View style={styles.historyItemLeft}>
-            <Paragraph style={{color: colors.onSurfaceVariant}}>{item.timestamp}</Paragraph>
-          </View>
-          <View style={styles.historyItemRight}>
-            <Paragraph style={styles.temperatureText}>{item.temperature}°{tempUnit}</Paragraph>
-          </View>
-          {/* Render gray divider line if not the last item */}
-          {index !== historyData.length - 1 && <Divider />}
+      {historyData.length === 0 ? (
+        <View style={styles.noDataContainer}>
+          <Paragraph style={{ textAlign: 'center', color: colors.onSurfaceVariant }}>
+            No data
+          </Paragraph>
         </View>
-      ))}
+      ) : (
+        historyData.map((item, index) => (
+          <View key={item.id} style={styles.historyItem}>
+            <View style={styles.historyItemLeft}>
+              <Paragraph style={{color: colors.onSurfaceVariant}}>{item.timestamp}</Paragraph>
+            </View>
+            <View style={styles.historyItemRight}>
+              <Paragraph style={styles.temperatureText}>{item.temperature}°{tempUnit}</Paragraph>
+            </View>
+            {index !== historyData.length - 1 && <Divider />}
+          </View>
+        ))
+      )}
     </ScrollView>
   );
 
@@ -87,9 +94,13 @@ function HistoryScreen({ navigation }) {
     const isDataValid = historyData.length > 0 && historyData.every(item => item.timestamp && item.temperature);
 
     if (!isDataValid) {
-      return <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <Paragraph>Loading...</Paragraph>
-      </View>;
+      return (
+        <View style={styles.noDataContainer}>
+          <Paragraph style={{ textAlign: 'center' }}>
+            No data
+          </Paragraph>
+        </View>
+      );
     }
 
     return <LineChartComponent data={historyData} />;
@@ -205,6 +216,12 @@ const styles = StyleSheet.create({
   logoutButton: {
     height: 48,
     justifyContent: 'center',
+  },
+  noDataContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
   },
 });
 

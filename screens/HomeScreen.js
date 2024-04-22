@@ -8,13 +8,16 @@ import { getCurrentUserEmail } from "../firebaseUtils/firestore";
 import AppContext from '../context/AppContext.js';
 
 function getDisplayTemperature(temperature, tempUnit) {
+  if (temperature === null) {
+    return null;
+  };
   let result;
   if (tempUnit === 'F') {
     result = (temperature * 1.8) + 32;
   } else {
     result = temperature;
   }
-  return result;
+  return result.toFixed(1);
 }
 
 function HomeScreen({ navigation }) {
