@@ -54,7 +54,7 @@ export default function HomeImagePicker({tempUnit}) {
 
       if (!result.canceled) {
         console.log("result", result.assets[0].uri);
-        navigation.navigate('Upload', { imageUri: result.assets[0].uri });
+        navigation.navigate('Upload', { imageUri: result.assets[0].uri, tempUnit });
       }
     } catch (e) {
       console.log(e.message);
